@@ -1,0 +1,116 @@
+import java.util.Objects;
+import java.util.Scanner;
+
+interface BankAccount {
+    String createAccount();
+    double getInterestRate();
+}
+
+class SavingsAccount implements BankAccount {
+    @Override
+    public String createAccount() {
+        return "Savings Account";
+    }
+
+    @Override
+    public double getInterestRate() {
+        return 0.04;
+    }
+}
+
+class CurrentAccount implements BankAccount {
+    @Override
+    public String createAccount() {
+        return "Current Account";
+    }
+
+    @Override
+    public double getInterestRate() {
+        return 0.05;
+    }
+}
+
+class LoanAccount implements BankAccount {
+    @Override
+    public String createAccount() {
+        return "Loan Account";
+    }
+
+    @Override
+    public double getInterestRate() {
+        return 0.5;
+    }
+}
+
+interface BankAccountFactory {
+    BankAccount createAccount(String accountType);
+}
+
+class SavingsAccountFactory implements BankAccountFactory {
+    @Override
+    public BankAccount createAccount(String accountType) {
+        if (Objects.equals(accountType, "Savings Account")) {
+            return new SavingsAccount();
+        } else {
+            throw new IllegalArgumentException("Invalid account type");
+        }
+    }
+}
+
+class CurrentAccountFactory implements BankAccountFactory {
+    @Override
+    public BankAccount createAccount(String accountType) {
+        if (Objects.equals(accountType, "Current Account")) {
+            return new CurrentAccount();
+        } else {
+            throw new IllegalArgumentException("Invalid account type");
+        }
+    }
+}
+
+class LoanAccountFactory implements BankAccountFactory {
+    @Override
+    public BankAccount createAccount(String accountType) {
+        if (Objects.equals(accountType, "Loan Account")) {
+            return new LoanAccount();
+        } else {
+            throw new IllegalArgumentException("Invalid account type");
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome ");
+
+        while (true) {
+            System.out.println("\nSelect account type (Savings Account / Current Account / Loan Account), or 'exit' to quit:");
+            String input = scanner.nextLine();
+
+            if (input.equalsIgnoreCase("exit")) {
+                break;
+            }
+
+            BankAccountFactory factory;
+            if (input.equalsIgnoreCase("Savings Account")) {
+                factory = new SavingsAccountFactory();
+            } else if (input.equalsIgnoreCase("Current Account")) {
+                factory = new CurrentAccountFactory();
+            } else if (input.equalsIgnoreCase("Loan Account")) {
+                factory = new LoanAccountFactory();
+            } else {
+                System.out.println("Invalid account type");
+                continue;
+            }
+
+            BankAccount account = factory.createAccount(input);
+            System.out.println("Account type: " + account.createAccount());
+            System.out.println("Interest Rate: " + account.getInterestRate());
+        }
+
+        System.out.println("Thank you");
+        scanner.close();
+    }
+}
